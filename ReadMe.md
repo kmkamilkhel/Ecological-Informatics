@@ -1,6 +1,6 @@
-# Comprehensive Analysis: LST, UHI, and Vegetation Dynamics
+# Comprehensive Analysis: LST, UHI, Vegetation Dynamics, and Hotspot Analysis
 
-This repository contains scripts and workflows for analyzing Land Surface Temperature (LST), Urban Heat Island (UHI) intensity, and vegetation indices across multiple cities using Landsat 8 data.
+This repository contains scripts and workflows for analyzing Land Surface Temperature (LST), Urban Heat Island (UHI) intensity, vegetation indices, and thermal hotspot dynamics across multiple cities using Landsat 8 data.
 
 ## Repository Structure
 ```
@@ -16,6 +16,10 @@ This repository contains scripts and workflows for analyzing Land Surface Temper
 📁 /UHI_Data
 ├── UHI_<CityName>.tif  # GeoTIFF files for UHI intensity maps
 
+📁 /Hotspot_Analysis
+├── Hotspot_<CityName>.shp  # Shapefiles for thermal hotspot zones
+├── Hotspot_<CityName>.tif  # Raster maps of thermal zones
+
 📁 /Scripts
 ├── landsat_data_download.js  # Script to download Landsat data
 ├── lst_calculation_code.js   # Script to calculate LST, NDVI, and FVC
@@ -24,14 +28,16 @@ This repository contains scripts and workflows for analyzing Land Surface Temper
 📁 /Documentation
 ├── README_LST.md  # Step-by-step guide for LST calculation
 ├── README_UHI.md  # Step-by-step guide for UHI analysis
+├── README_Hotspot.md  # Guide for hotspot analysis
 ```
 
 ## Features
 - **Landsat Data Download:** Script to download Landsat data for predefined cities with cloud cover filtering.
 - **LST, NDVI, and FVC Calculation:** Generate median composites for LST (in °C), NDVI, and FVC.
 - **Urban Heat Island Analysis:** Compare LST between urban and rural zones to calculate UHI intensity.
-- **Visualization:** Generate and visualize maps for LST, NDVI, FVC, and UHI intensity with color-coded palettes.
-- **Export:** Save results as GeoTIFF files for further analysis.
+- **Thermal Hotspot Analysis:** Identify and classify thermal hotspots and cool spots using the Getis-Ord Gi* statistic.
+- **Visualization:** Generate and visualize maps for LST, NDVI, FVC, UHI intensity, and thermal hotspots with color-coded palettes.
+- **Export:** Save results as GeoTIFF and Shapefiles for further analysis.
 
 ## Dependencies
 - **Google Earth Engine (GEE):** All scripts are designed to run on GEE.
@@ -39,6 +45,7 @@ This repository contains scripts and workflows for analyzing Land Surface Temper
   ```javascript
   var landsatLST = require('users/sofiaermida/landsat_smw_lst:modules/Landsat_LST.js');
   ```
+- **ArcGIS Pro:** Used for advanced spatial analyses, including thermal hotspot detection.
 
 ## Workflow
 ### 1. Download Landsat Data
@@ -59,6 +66,13 @@ This repository contains scripts and workflows for analyzing Land Surface Temper
   - Calculate UHI intensity as the difference between urban and rural LST.
   - Visualize UHI intensity maps.
   - Export UHI maps to `/UHI_Data`.
+
+### 4. Hotspot Analysis
+- Perform hotspot analysis in **ArcGIS Pro**:
+  - Use the **Getis-Ord Gi*** statistic to identify clusters of high (hotspots) and low (cool spots) LST values.
+  - Classify results into thermal zones based on confidence levels (e.g., Tier-1 to Tier-3).
+  - Generate raster and vectorized maps of thermal hotspots and cool spots.
+- Export results as raster and shapefiles to the `/Hotspot_Analysis` folder.
 
 ## Input Parameters
 - **Cities:**
@@ -83,6 +97,8 @@ This repository contains scripts and workflows for analyzing Land Surface Temper
   - NDVI and FVC composites for each city.
 - **UHI Maps:**
   - Intensity maps showing temperature differences between urban and rural zones.
+- **Hotspot Maps:**
+  - Raster and shapefiles of thermal clusters (hotspots and cool spots).
 - **Summary Statistics:**
   - Mean LST values for urban and rural zones.
   - UHI intensity for each city.
@@ -104,6 +120,11 @@ This repository contains scripts and workflows for analyzing Land Surface Temper
   ```javascript
   { min: -5, max: 5, palette: ['#0000ff', '#ffffff', '#ff0000'] }
   ```
+- **Thermal Hotspots:**
+  ```text
+  - Superior Cool Zone (Tier-3): Z-score < -2.58, p-value < 0.01
+  - Superior Hot Zone (Tier-3): Z-score > 2.58, p-value < 0.01
+  ```
 
 ## How to Use
 1. Clone this repository or copy the scripts into the GEE Code Editor.
@@ -112,7 +133,8 @@ This repository contains scripts and workflows for analyzing Land Surface Temper
    - `landsat_data_download.js`
    - `lst_calculation_code.js`
    - `urban_heat_island_analysis.js`
-4. Access the exported GeoTIFF files in the respective folders in Google Drive.
+4. Perform hotspot analysis using **ArcGIS Pro**.
+5. Access the exported GeoTIFF files and shapefiles in the respective folders in Google Drive.
 
 ## Example Results
 ### Islamabad
@@ -124,6 +146,10 @@ This repository contains scripts and workflows for analyzing Land Surface Temper
 - **Urban Mean LST:** 35.0°C
 - **Rural Mean LST:** 33.0°C
 - **UHI Intensity:** 2.0°C
+
+### Hotspot Analysis
+- **Hotspots (Tier-3):** Areas with extreme thermal anomalies (e.g., >99% confidence).
+- **Cool Spots (Tier-3):** Areas with significant cooling anomalies (e.g., >99% confidence).
 
 ## Contact
 For questions or feedback, please contact:
